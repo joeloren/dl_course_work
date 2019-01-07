@@ -13,6 +13,8 @@ from keras import regularizers
 import keras
 from sklearn.model_selection import train_test_split
 
+from mobilenet import MobileNet
+
 
 def normalize(X_train, X_test):
     """
@@ -123,7 +125,8 @@ if __name__ == "__main__":
                             save_weights_only=True,
                             period=5)
 
-    model = build_cifar_10_model(weight_decay=1e-4)
+# model = build_cifar_10_model(weight_decay=1e-4)
+    model = MobileNet(shape=(32, 32, 3), num_classes=10, alpha=.20)
     model.summary()
 
     batch_size = 32
@@ -132,7 +135,7 @@ if __name__ == "__main__":
     adam = keras.optimizers.adam(lr=.001, decay=1e-6)
     num_epochs = 250
 
-    model.compile(loss="categorical_crossentropy", optimizer=adam, metrics=["accuracy"])
+    model.compile(loss="categorical_crossentropy", optimizer='adam', metrics=["accuracy"])
 
     datagen = create_datagen(X_train, X_test)
     model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size),
